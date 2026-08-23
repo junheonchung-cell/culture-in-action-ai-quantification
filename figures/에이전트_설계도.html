@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>AI 연구 에이전트 설계도</title>
+<style>
+  :root {
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b7280;
+    --text-accent: #2b4c7e;
+    --border-strong: #d1d5db;
+    --surface-0: #f9fafb;
+    --surface-1: #eef2f7;
+    --surface-2: #e2e8f4;
+    --font-voice: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", Pretendard, sans-serif;
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: #ffffff !important; }
+  body { margin: 0; padding: 40px 20px; font-family: var(--font-voice); }
+  .sr-only { position: absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+
+  .wrap { max-width: 760px; margin: 0 auto; color: var(--text-primary); }
+  .eyebrow { text-align: center; font-size: 12px; font-weight: 700; color: var(--text-accent); letter-spacing: .08em; }
+  .title { text-align: center; font-size: 20px; font-weight: 800; margin: 6px 0 6px; }
+  .subtitle { text-align: center; font-size: 12px; color: var(--text-secondary); margin-bottom: 30px; }
+
+  .io { text-align: center; border-radius: 10px; padding: 10px 16px; font-size: 12.5px; font-weight: 700; display: inline-block; }
+  .io.in { background: var(--surface-2); border: 1.5px dashed var(--text-accent); }
+  .io.out { background: var(--text-accent); color: #ffffff; }
+  .center { text-align: center; }
+  .arrow { text-align: center; font-size: 18px; color: var(--text-accent); margin: 4px 0; }
+  .arrowlabel { text-align: center; font-size: 10px; color: var(--text-secondary); margin: 2px 0 -2px; }
+
+  .module { border: 1.5px solid var(--text-accent); border-radius: 12px; padding: 14px 18px; background: var(--surface-1); margin: 4px 0; }
+  .module .name { font-size: 13.5px; font-weight: 800; color: var(--text-accent); }
+  .module .job { font-size: 11.5px; margin-top: 4px; }
+  .module .detail { font-size: 10.5px; color: var(--text-secondary); margin-top: 4px; line-height: 1.5; }
+
+  .branchbox { border: 1px solid var(--border-strong); border-radius: 12px; padding: 12px; background: var(--surface-0); margin: 4px 0; }
+  .branchbox .lbl { text-align: center; font-size: 10.5px; font-weight: 700; color: var(--text-secondary); margin-bottom: 8px; }
+  .branches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .branch { border-radius: 8px; padding: 8px; text-align: center; font-size: 10.5px; border: 1px solid var(--border-strong); background: #ffffff; }
+  .branch .h { font-weight: 700; font-size: 11px; }
+  .branch.explicit { border-color: var(--text-accent); }
+  .branch.implicit { border-style: dashed; border-color: var(--text-accent); }
+
+  .feedback { border: 1.5px dashed var(--text-secondary); border-radius: 10px; padding: 10px 14px; margin-top: 10px; font-size: 10.5px; color: var(--text-secondary); text-align: center; }
+
+  .note { margin-top: 26px; font-size: 11px; color: var(--text-secondary); text-align: center; border-top: 1px solid var(--border-strong); padding-top: 14px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<h2 class="sr-only">AI 연구 에이전트 설계도: 원문 입력이 검색, 근거추출, 검증 세 모듈을 거쳐 명시적 근거, 암묵적 근거, 근거 부재로 분기되고, 최종적으로 변수값과 근거 문장, 신뢰도를 출력하며 FPR·FNR 모니터링이 검증 모듈로 피드백되는 파이프라인.</h2>
+
+<div class="wrap">
+  <div class="eyebrow">AGENT ARCHITECTURE</div>
+  <div class="title">S·G·V 연구 에이전트 설계도</div>
+  <div class="subtitle">검색(Search) → 근거추출(Grounding) → 검증(Verification)</div>
+
+  <div class="center"><div class="io in">입력: 원문 텍스트 (앵커 논문 인용문)</div></div>
+  <div class="arrow">↓</div>
+
+  <div class="module">
+    <div class="name">① 검색 모듈 (Search)</div>
+    <div class="job">"이 변수(V1~V10)를 뒷받침할 문장이 원문 어디에 있는가?"를 탐색</div>
+    <div class="detail">출력: 후보 문장 목록 + 각 문장의 문단·위치 정보</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="module">
+    <div class="name">② 근거추출 모듈 (Grounding)</div>
+    <div class="job">후보 문장을 그대로 인용하며, 5장의 산식(예: DI = N_e ÷ N_p)에 대입해 값을 산출</div>
+    <div class="detail">출력: (변수명, 산출값, 인용문) 튜플</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="module">
+    <div class="name">③ 검증 모듈 (Verification)</div>
+    <div class="job">산출값이 인용문과 실제로 맞는지 재대조하고, 근거의 강도를 3단계로 분류(V6′)</div>
+    <div class="detail">여기서 과잉추출(FP)·과소추출(FN) 여부가 최종 결정된다</div>
+  </div>
+  <div class="arrowlabel">근거 강도에 따라 분기</div>
+  <div class="arrow">↓</div>
+
+  <div class="branchbox">
+    <div class="lbl">V6′ 3단계 분기</div>
+    <div class="branches">
+      <div class="branch explicit"><div class="h">명시적 근거</div>전칭 표현 등<br>→ 값 = 1.0</div>
+      <div class="branch implicit"><div class="h">암묵적 근거</div>구체적 서술, 수식어 없음<br>→ 값 = c (0.5~0.8)</div>
+      <div class="branch"><div class="h">근거 부재</div>해당 서술 없음<br>→ 값 = N/A</div>
+    </div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="center"><div class="io out">출력: (변수 Vᵢ, 값, 근거 문장, 신뢰도)</div></div>
+
+  <div class="feedback">↺ 피드백 루프: 출력된 값들의 FPR(과잉추출률)·FNR(과소추출률)을 집계해<br>검증 모듈(③)의 판정 기준을 재조정 — H1이 요구하는 "두 오류의 동시 저감"을 구조적으로 강제</div>
+
+  <div class="note">이 설계도는 5.1절의 세 기능(S·G·V)과 5.2절의 V6′ 3단계 분류, 5.3절의 H1(FPR·FNR 동시 저감)을<br>하나의 파이프라인으로 통합한 것이다 — 즉 본 연구의 방법론 그 자체가 에이전트의 청사진이다.</div>
+</div>
+</body>
+</html>

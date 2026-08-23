@@ -1,0 +1,10 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+~$*
+*.tmp
+
+# Word/Office lock files
+~$*.docx
+~$*.pptx
+~$*.xlsx

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>AI 적용 연구 프로세스</title>
+<style>
+  :root {
+    --text-primary: #1a1a1a;
+    --text-secondary: #6b7280;
+    --text-accent: #2b4c7e;
+    --border-strong: #d1d5db;
+    --surface-0: #f9fafb;
+    --surface-1: #eef2f7;
+    --surface-2: #e2e8f4;
+    --font-voice: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", Pretendard, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: #ffffff !important; }
+  body { margin: 0; padding: 48px 20px; font-family: var(--font-voice); }
+  .sr-only { position: absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+
+  .wrap { max-width: 680px; margin: 0 auto; color: var(--text-primary); }
+  .eyebrow { text-align: center; font-size: 12px; font-weight: 700; color: var(--text-accent); letter-spacing: .08em; }
+  .title { text-align: center; font-size: 20px; font-weight: 800; margin: 6px 0 8px; line-height: 1.4; }
+  .subtitle { text-align: center; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 36px; }
+
+  .steps { position: relative; padding-left: 46px; }
+  .steps::before { content: ""; position: absolute; left: 17px; top: 6px; bottom: 6px; width: 2px; background: var(--border-strong); }
+  .step { position: relative; margin-bottom: 24px; }
+  .step:last-child { margin-bottom: 0; }
+  .num { position: absolute; left: -46px; top: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--text-accent); border: 1.5px solid var(--text-accent); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #ffffff; }
+
+  .card { border: 1.5px solid var(--border-strong); border-radius: 14px; padding: 14px 18px; background: var(--surface-0); }
+  .card .t { font-size: 14px; font-weight: 700; }
+  .card .d { font-size: 12px; color: var(--text-secondary); margin-top: 5px; line-height: 1.55; }
+  .card .ai { display: inline-block; margin-top: 8px; font-size: 10.5px; font-weight: 700; color: var(--text-accent); background: var(--surface-1); border: 1px solid var(--text-accent); border-radius: 6px; padding: 2px 8px; }
+
+  .note { margin-top: 30px; font-size: 11.5px; color: var(--text-secondary); text-align: center; border-top: 1px solid var(--border-strong); padding-top: 16px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<h2 class="sr-only">AI 적용 연구 프로세스: 앵커 논문 원문 확보부터 논증 재구성, 취약점 반증, 변수 정식화, 사례 시뮬레이션, 반복 검증까지 6단계에서 AI가 각각 수행한 역할을 보여주는 다이어그램.</h2>
+
+<div class="wrap">
+  <div class="eyebrow">RESEARCH PROCESS</div>
+  <div class="title">이 연구는 어디에 AI를 썼는가</div>
+  <div class="subtitle">앵커 논문 확보부터 검증까지, 6단계 각각에서 AI 에이전트가 수행한 역할</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="num">1</div>
+      <div class="card">
+        <div class="t">원문 확보</div>
+        <div class="d">앵커 논문(Wong-Villacres et al., 2020)의 실제 서지정보를 웹에서 검색하고, PDF 전문을 텍스트로 추출해 이후 모든 인용의 원문 대조 기준을 마련했다.</div>
+        <div class="ai">AI 역할: 검색(Search) + 텍스트 추출</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">2</div>
+      <div class="card">
+        <div class="t">논증 재구성</div>
+        <div class="d">앵커 논문의 주장을 전제(P1~P9)와 결론(C)의 삼단논법 형식으로 재구성해, 어느 전제가 무엇으로 뒷받침되는지 한눈에 드러냈다.</div>
+        <div class="ai">AI 역할: 논증 구조 추출 및 형식화</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">3</div>
+      <div class="card">
+        <div class="t">취약점 반증</div>
+        <div class="d">검증되지 않은 전제(P10: 해석의 타당성이 연구자 개인의 판단에만 근거)를 식별하고, 이를 대체하는 새 전제(P10′)를 반증 논리로 제안했다.</div>
+        <div class="ai">AI 역할: 논증 취약점 탐지 + 대체안 생성</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">4</div>
+      <div class="card">
+        <div class="t">변수 정식화</div>
+        <div class="d">도구함·역량·전략 같은 질적 개념 10개를 산식(V1~V10)으로 조작적으로 정의하고, 각 산식의 성립 조건과 균등가정 같은 방법론적 전제를 명시했다.</div>
+        <div class="ai">AI 역할: 조작적 정의 및 수식 설계</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">5</div>
+      <div class="card">
+        <div class="t">사례 시뮬레이션</div>
+        <div class="d">앵커 논문의 실제 원문 인용에 V1~V10 산식을 대입해 수치를 산출하고, 산출된 모든 값이 어느 문장에서 나왔는지 역추적 가능하도록 근거를 병기했다.</div>
+        <div class="ai">AI 역할: 근거추출(Grounding) + 계산 수행</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">6</div>
+      <div class="card">
+        <div class="t">반복 검증</div>
+        <div class="d">참여자 가명 오류, 수식 표기 손상(LaTeX 변환 오류) 등 스스로 만든 결과물을 원문과 재대조해 오류를 찾아내고 수정하는 과정을 반복했다.</div>
+        <div class="ai">AI 역할: 검증(Verification) + 자기수정</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">이 6단계는 5장의 S(검색)·G(근거추출)·V(검증) 3기능이 연구 전체의 작성 과정에도<br>그대로 재귀적으로 적용되었음을 보여준다 — 방법론이 연구 대상이자 연구 도구였다.</div>
+</div>
+</body>
+</html>
